@@ -1,4 +1,6 @@
 import Foundation
+
+#if canImport(WebRTC)
 import WebRTC
 
 final class RealtimeClient: NSObject {
@@ -23,7 +25,7 @@ final class RealtimeClient: NSObject {
         let dcConfig = RTCDataChannelConfiguration()
         dataChannel = peerConnection?.dataChannel(forLabel: "oai-events", configuration: dcConfig)
 
-        peerConnection?.offer(for: constraints) { [weak self] offer, error in
+        peerConnection?.offer(for: constraints) { [weak self] offer, _ in
             guard let self = self, let offer = offer else { return }
             self.peerConnection?.setLocalDescription(offer) { _ in }
             self.postOffer(sdp: offer.sdp) { answer in
@@ -42,7 +44,6 @@ final class RealtimeClient: NSObject {
     func stopTalking(completion: @escaping (String, String) -> Void) {
         audioTrack?.isEnabled = false
         send(data: ["type": "response.create", "response": ["instructions": "please answer now with a final spoken reply"]])
-        // For demo purposes we call completion with empty transcripts
         completion("", "")
     }
 
@@ -81,3 +82,22 @@ extension RealtimeClient: RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {}
     func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {}
 }
+
+#else
+
+// Fallback stub to allow building/running the app without WebRTC present.
+final class RealtimeClient: NSObject {
+    func connect(status: @escaping (String) -> Void) {
+        // Simulate an immediate connection for UI/dev flows
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { status("connected") }
+    }
+    func startTalking() {}
+    func stopTalking(completion: @escaping (String, String) -> Void) {
+        // Simulate a final reply only once talking stops
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            completion("(demo) hello", "(demo) hi there")
+        }
+    }
+}
+
+#endif

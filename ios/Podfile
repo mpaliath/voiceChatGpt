@@ -1,6 +1,21 @@
 platform :ios, '16.0'
 use_frameworks!
 
+# Explicitly point CocoaPods at the project to avoid target inspection issues
+project 'VoiceChatGpt.xcodeproj'
+
 target 'VoiceChatGpt' do
-  pod 'GoogleWebRTC'
+  # Using a more modern WebRTC version that supports Apple Silicon simulators
+  pod 'WebRTC-lib', '~> 125.0'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |t|
+    t.build_configurations.each do |config|
+      # Ensure deployment target matches project to avoid build warnings
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+      # Only exclude arm64 for Intel-based simulators
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386'
+    end
+  end
 end

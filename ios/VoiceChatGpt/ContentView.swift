@@ -11,7 +11,13 @@ struct ContentView: View {
 
             Spacer()
 
-            Button(action: {}) {
+            Button(action: {
+                if viewModel.isTalking {
+                    viewModel.stopTalking()
+                } else {
+                    viewModel.startTalking()
+                }
+            }) {
                 Circle()
                     .fill(viewModel.isTalking ? Color.red : Color.blue)
                     .frame(width: 120, height: 120)
@@ -21,9 +27,6 @@ struct ContentView: View {
                             .font(.system(size: 40))
                     )
             }
-            .simultaneousGesture(LongPressGesture(minimumDuration: 0.1)
-                .onChanged { _ in viewModel.startTalking() }
-                .onEnded { _ in viewModel.stopTalking() })
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("You: \(viewModel.lastUserTranscript)")

@@ -14,6 +14,7 @@ struct VoiceChatGptApp: App {
     }
 
     private func configureAudioSession() {
+        #if os(iOS)
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setCategory(.playAndRecord, mode: .voiceChat, options: [.allowBluetooth])
@@ -21,5 +22,8 @@ struct VoiceChatGptApp: App {
         } catch {
             print("AudioSession error: \(error)")
         }
+        #else
+        // Audio session configuration not required / unavailable on macOS for this app target.
+        #endif
     }
 }
