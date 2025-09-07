@@ -16,7 +16,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "45"
             endingLineNumber = "45"
-            landmarkName = "sendAnalytics(event:payload:)"
+            landmarkName = "stopTalking()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -32,7 +32,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "23"
             endingLineNumber = "23"
-            landmarkName = "startTalking()"
+            landmarkName = "connect()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

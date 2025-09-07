@@ -3,67 +3,109 @@ import Foundation
 #if canImport(WebRTC)
 import WebRTC
 
+// RealtimeClient encapsulates the WebRTC + OpenAI Realtime data channel protocol.
+// It now:
+// 1. Creates a peer connection & audio track (muted until speaking).
+// 2. Opens the "oai-events" RTCDataChannel used by OpenAI for JSON events.
+// 3. Sends a session.update after the data channel opens to configure language, VAD, etc.
+// 4. Parses incoming assistant text deltas and completion events.
 final class RealtimeClient: NSObject {
     private var peerConnection: RTCPeerConnection?
     private var dataChannel: RTCDataChannel?
     private var audioTrack: RTCAudioTrack?
 
-    func connect(status: @escaping (String) -> Void) {
+    // Streaming assistant text buffer for current response
+    private var currentAssistantBuffer: String = ""
+
+    // Callbacks for UI layer
+    var onStatus: ((String) -> Void)?
+    var onAssistantTextDelta: ((String) -> Void)? // receives incremental full text
+    var onAssistantResponseCompleted: ((String) -> Void)?
+
+    // Default session configuration values
+    private let defaultInstructions = "You are a concise, helpful voice assistant. Always respond in English."
+
+    func connect(instructions: String? = nil) {
         let factory = RTCPeerConnectionFactory()
         let config = RTCConfiguration()
         config.sdpSemantics = .unifiedPlan
         let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
         peerConnection = factory.peerConnection(with: config, constraints: constraints, delegate: self)
 
-        let stream = factory.audioSource(with: RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil))
-        audioTrack = factory.audioTrack(with: stream, trackId: "audio0")
-        if let track = audioTrack {
-            track.isEnabled = false
-            peerConnection?.add(track, streamIds: ["stream0"])
-        }
+        // Local microphone audio track; disabled until user starts talking.
+        let source = factory.audioSource(with: RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil))
+        audioTrack = factory.audioTrack(with: source, trackId: "audio0")
+        if let track = audioTrack { track.isEnabled = false; peerConnection?.add(track, streamIds: ["stream0"]) }
 
+        // Data channel for events
         let dcConfig = RTCDataChannelConfiguration()
         dataChannel = peerConnection?.dataChannel(forLabel: "oai-events", configuration: dcConfig)
+        dataChannel?.delegate = self
 
-        peerConnection?.offer(for: constraints) { [weak self] offer, _ in
-            guard let self = self, let offer = offer else { return }
+        // Create SDP offer and send to backend -> OpenAI
+        peerConnection?.offer(for: constraints) { [weak self] offer, error in
+            guard let self, let offer else { return }
             self.peerConnection?.setLocalDescription(offer) { _ in }
             self.postOffer(sdp: offer.sdp) { answer in
                 let remote = RTCSessionDescription(type: .answer, sdp: answer)
-                self.peerConnection?.setRemoteDescription(remote) { _ in
-                    status("connected")
+                self.peerConnection?.setRemoteDescription(remote) { [weak self] _ in
+                    self?.onStatus?("connected")
+                    // Session update will be sent when data channel reports open; store instructions for later.
+                    self?.pendingSessionInstructions = instructions ?? self?.defaultInstructions
                 }
             }
         }
     }
 
-    func startTalking() {
-        audioTrack?.isEnabled = true
+    // MARK: - Speaking control
+    func startTalking() { audioTrack?.isEnabled = true }
+    func stopTalking() { audioTrack?.isEnabled = false }
+
+    // MARK: - Session & Responses
+    private var pendingSessionInstructions: String?
+
+    private func sendSessionUpdate(_ instructions: String) {
+        let payload: [String: Any] = [
+            "type": "session.update",
+            "session": [
+                "instructions": instructions,
+                "modalities": ["text", "audio"],
+                // Server VAD handles turn detection so we can just toggle track enable; silence detection optional client-side.
+                "turn_detection": [
+                    "type": "server_vad",
+                    "silence_duration_ms": 800
+                ],
+                "voice": "alloy",
+                "language": "en"
+            ]
+        ]
+        send(data: payload)
     }
 
-    func stopTalking(completion: @escaping (String, String) -> Void) {
-        audioTrack?.isEnabled = false
-        send(data: ["type": "response.create", "response": ["instructions": "please answer now with a final spoken reply"]])
-        completion("", "")
+    func requestFinalResponse() {
+        // Ask model to conclude current turn explicitly
+        send(data: [
+            "type": "response.create",
+            "response": ["instructions": "Provide your final spoken reply now."]
+        ])
     }
 
+    // MARK: - Low-level send helper
     private func send(data: [String: Any]) {
         guard let channel = dataChannel else { return }
-        let json = try? JSONSerialization.data(withJSONObject: data)
-        if let data = json {
-            channel.sendData(RTCDataBuffer(data: data, isBinary: false))
-        }
+        guard let json = try? JSONSerialization.data(withJSONObject: data) else { return }
+        channel.sendData(RTCDataBuffer(data: json, isBinary: false))
     }
 
+    // MARK: - SDP Exchange via backend
     private func postOffer(sdp: String, completion: @escaping (String) -> Void) {
         guard let url = URL(string: "http://localhost:8080/webrtc/offer") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body = ["sdp": sdp]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["sdp": sdp])
         URLSession.shared.dataTask(with: request) { data, _, _ in
-            guard let data = data,
+            guard let data,
                   let json = try? JSONSerialization.jsonObject(with: data) as? [String: String],
                   let answer = json["sdp"] else { return }
             completion(answer)
@@ -71,6 +113,7 @@ final class RealtimeClient: NSObject {
     }
 }
 
+// MARK: - Peer Connection Delegate
 extension RealtimeClient: RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {}
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {}
@@ -80,22 +123,34 @@ extension RealtimeClient: RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {}
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {}
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {}
-    func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {}
+    func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
+        // Channel opened: send session.update if we have pending instructions.
+        if let pending = pendingSessionInstructions { sendSessionUpdate(pending); pendingSessionInstructions = nil }
+    }
 }
 
-#else
-
-// Fallback stub to allow building/running the app without WebRTC present.
-final class RealtimeClient: NSObject {
-    func connect(status: @escaping (String) -> Void) {
-        // Simulate an immediate connection for UI/dev flows
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { status("connected") }
+// MARK: - Data Channel Delegate (parsing OpenAI events)
+extension RealtimeClient: RTCDataChannelDelegate {
+    func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
+        // Could surface state changes if desired
     }
-    func startTalking() {}
-    func stopTalking(completion: @escaping (String, String) -> Void) {
-        // Simulate a final reply only once talking stops
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            completion("(demo) hello", "(demo) hi there")
+
+    func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
+        guard !buffer.isBinary, let jsonObj = try? JSONSerialization.jsonObject(with: buffer.data) as? [String: Any], let type = jsonObj["type"] as? String else { return }
+
+        switch type {
+        case "response.output_text.delta":
+            if let delta = (jsonObj["delta"] as? String) ?? (jsonObj["text"] as? String) { // handle possible naming
+                currentAssistantBuffer.append(delta)
+                onAssistantTextDelta?(currentAssistantBuffer)
+            }
+        case "response.completed":
+            onAssistantResponseCompleted?(currentAssistantBuffer)
+            currentAssistantBuffer = ""
+        case "error":
+            if let message = jsonObj["error"] as? String { onStatus?("error: \(message)") }
+        default:
+            break
         }
     }
 }

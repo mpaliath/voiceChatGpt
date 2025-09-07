@@ -37,7 +37,7 @@ app.post('/webrtc/offer', async (req, res) => {
   }
   const { sdp } = parseResult.data;
   try {
-    const response = await fetch(`https://api.openai.com/v1/realtime?model=${MODEL}&voice=alloy`, {
+    const response = await fetch(`https://api.openai.com/v1/realtime/calls?model=${MODEL}&voice=alloy`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
