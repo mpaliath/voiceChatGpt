@@ -1,0 +1,27 @@
+{
+  "name": "service",
+  "version": "1.0.0",
+  "description": "Backend proxy for OpenAI Realtime iOS demo",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "node-fetch": "^2.7.0",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "jest": "^30.1.2",
+    "nodemon": "^3.1.10"
+  }
+}

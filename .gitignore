@@ -1,0 +1,6 @@
+/node_modules
+service/node_modules
+ios/Pods
+ios/VoiceChatGpt.xcworkspace
+.DS_Store
+.env

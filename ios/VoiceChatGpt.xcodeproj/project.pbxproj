@@ -1,0 +1,272 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B0001 /* VoiceChatGptApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0002 /* VoiceChatGptApp.swift */; };
+		B0002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0003 /* ContentView.swift */; };
+		B0003 /* RealtimeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0004 /* RealtimeClient.swift */; };
+		B0004 /* VoiceChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0005 /* VoiceChatViewModel.swift */; };
+		B0005 /* PIIRedactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0006 /* PIIRedactor.swift */; };
+		B0006 /* TranscriptRingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0007 /* TranscriptRingBuffer.swift */; };
+		D7D38C7C85FC2BDD6F98BA94 /* Pods_VoiceChatGpt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48FFE09D5520844C443A26A2 /* Pods_VoiceChatGpt.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		40F7F3C3FA1EA5BF412AB3AB /* Pods-VoiceChatGpt.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VoiceChatGpt.debug.xcconfig"; path = "Target Support Files/Pods-VoiceChatGpt/Pods-VoiceChatGpt.debug.xcconfig"; sourceTree = "<group>"; };
+		48FFE09D5520844C443A26A2 /* Pods_VoiceChatGpt.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VoiceChatGpt.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		673153D9EE13CBFAE0509F28 /* Pods-VoiceChatGpt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VoiceChatGpt.release.xcconfig"; path = "Target Support Files/Pods-VoiceChatGpt/Pods-VoiceChatGpt.release.xcconfig"; sourceTree = "<group>"; };
+		6FC4F7142E6D0FD1008488A5 /* VoiceChatGpt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoiceChatGpt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0002 /* VoiceChatGptApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChatGptApp.swift; sourceTree = "<group>"; };
+		F0003 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F0004 /* RealtimeClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeClient.swift; sourceTree = "<group>"; };
+		F0005 /* VoiceChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChatViewModel.swift; sourceTree = "<group>"; };
+		F0006 /* PIIRedactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PIIRedactor.swift; sourceTree = "<group>"; };
+		F0007 /* TranscriptRingBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptRingBuffer.swift; sourceTree = "<group>"; };
+		F0008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F0009 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+				D7D38C7C85FC2BDD6F98BA94 /* Pods_VoiceChatGpt.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		688BE6C8BE92B4F8AB4D92FB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				48FFE09D5520844C443A26A2 /* Pods_VoiceChatGpt.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		90FE573F864256CC4263887B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				40F7F3C3FA1EA5BF412AB3AB /* Pods-VoiceChatGpt.debug.xcconfig */,
+				673153D9EE13CBFAE0509F28 /* Pods-VoiceChatGpt.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		G0001 = {
+			isa = PBXGroup;
+			children = (
+				G0002 /* VoiceChatGpt */,
+				6FC4F7142E6D0FD1008488A5 /* VoiceChatGpt.app */,
+				90FE573F864256CC4263887B /* Pods */,
+				688BE6C8BE92B4F8AB4D92FB /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		G0002 /* VoiceChatGpt */ = {
+			isa = PBXGroup;
+			children = (
+				F0002 /* VoiceChatGptApp.swift */,
+				F0003 /* ContentView.swift */,
+				F0004 /* RealtimeClient.swift */,
+				F0005 /* VoiceChatViewModel.swift */,
+				F0006 /* PIIRedactor.swift */,
+				F0007 /* TranscriptRingBuffer.swift */,
+				F0008 /* Info.plist */,
+			);
+			path = VoiceChatGpt;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		T0001 /* VoiceChatGpt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0001 /* Build configuration list for PBXNativeTarget "VoiceChatGpt" */;
+			buildPhases = (
+				37583756A526CA2F41E1CCF3 /* [CP] Check Pods Manifest.lock */,
+				S0001 /* Sources */,
+				F0009 /* Frameworks */,
+				R0001 /* Resources */,
+				A13C5F2634E94F3279ED5BB1 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VoiceChatGpt;
+			productName = VoiceChatGpt;
+			productReference = 6FC4F7142E6D0FD1008488A5 /* VoiceChatGpt.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		P0001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = C0002 /* Build configuration list for PBXProject "VoiceChatGpt" */;
+			compatibilityVersion = "Xcode 15.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = G0001;
+			productRefGroup = G0001;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				T0001 /* VoiceChatGpt */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		R0001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		37583756A526CA2F41E1CCF3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VoiceChatGpt-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A13C5F2634E94F3279ED5BB1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VoiceChatGpt/Pods-VoiceChatGpt-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VoiceChatGpt/Pods-VoiceChatGpt-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VoiceChatGpt/Pods-VoiceChatGpt-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		S0001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				B0001 /* VoiceChatGptApp.swift in Sources */,
+				B0002 /* ContentView.swift in Sources */,
+				B0003 /* RealtimeClient.swift in Sources */,
+				B0004 /* VoiceChatViewModel.swift in Sources */,
+				B0005 /* PIIRedactor.swift in Sources */,
+				B0006 /* TranscriptRingBuffer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C1001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 40F7F3C3FA1EA5BF412AB3AB /* Pods-VoiceChatGpt.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEVELOPMENT_TEAM = U4J6FD52VY;
+				INFOPLIST_FILE = VoiceChatGpt/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.touchstone.VoiceChatGpt;
+				PRODUCT_MODULE_NAME = VoiceChatGpt;
+				PRODUCT_NAME = VoiceChatGpt;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		C1002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 673153D9EE13CBFAE0509F28 /* Pods-VoiceChatGpt.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEVELOPMENT_TEAM = U4J6FD52VY;
+				INFOPLIST_FILE = VoiceChatGpt/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.touchstone.VoiceChatGpt;
+				PRODUCT_MODULE_NAME = VoiceChatGpt;
+				PRODUCT_NAME = VoiceChatGpt;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C0001 /* Build configuration list for PBXNativeTarget "VoiceChatGpt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1001 /* Debug */,
+				C1002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C0002 /* Build configuration list for PBXProject "VoiceChatGpt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1001 /* Debug */,
+				C1002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = P0001 /* Project object */;
+}
